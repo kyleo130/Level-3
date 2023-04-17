@@ -7,10 +7,10 @@ const context = canvas.getContext('2d');
 
 let bridgeTiles = [];
 for (let i = 0; i < 10; i++) {
-  bridgeTiles.push(BridgeTile(context, 176 + 32 * i, 208));
+  bridgeTiles.push(BridgeTile(context, 176 + 32 * i, 240));
 }
 
-const player = Player(context, 112, 192);
+const player = Player(context, 112, 224);
 
 let result = [];
 let submitted = false;
@@ -81,7 +81,7 @@ function doFrame(now) {
         bridgeTiles[i].danger();
       }
 
-      player.setXY(112, 192);
+      player.setXY(112, 224);
       player.move();
     }
 
@@ -133,7 +133,7 @@ function doFrame(now) {
       }
 
       for (let i = 0; i < 10; i++) {
-        context.fillText(result[i], 176 + 32 * i, 284);
+        context.fillText(result[i], 176 + 32 * i, 316);
       }
     }   
     
