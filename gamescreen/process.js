@@ -125,7 +125,7 @@ function doFrame(now) {
     context.font = "20px Consolas";
     context.textAlign = "center";
 
-    if (submitted) {
+    if (result.length > 0) {
       if (!correct) {
         context.fillStyle = "red";
       } else {
