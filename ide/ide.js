@@ -18,7 +18,17 @@ let defaultCode =
 // The sorted array is: [1, 2, 2, 4, 5, 7, 9].
 
 function sortArr(arr) {
-    return arr.sort();
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[i] > arr[j]) {
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+   }
+   
+   return arr;
 }
 `
 
@@ -29,7 +39,7 @@ let resetButton = document.getElementById("reset")
 
 let skeletonAfter = 
 `
-let arrBefore = [4, 1, 8, 5, 2, 9, 3, 0, 7, 6];
+let arrBefore = [4, 1, 8, 5, 2, 9, 3, 10, 7, 6];
 let arrAfter = sortArr(arrBefore);
 arrAfter;
 `
@@ -49,7 +59,10 @@ submitButton.addEventListener('click', function() {
     let code = editor.getValue();
     try {
         let arrResult = eval(code + skeletonAfter);
-        let correctResult = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        if (!Array.isArray(arrResult)) {
+            throw new Error("Function did not return an array.");
+        }
+        let correctResult = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         setResult(arrResult);
         setSubmitted(true);
         setCorrect(testSame(arrResult, correctResult));

@@ -55,19 +55,15 @@ function sendFail() {
 function endAnimation() {
   setFinished(true);
   player.stop();
-  result = [];
 }
 
 function dieAnimation() {
   setFinished(true);
   player.die();
-  result = [];
 }
 
-function handleStepOnRed(x, y) {
-  let coorX = Math.floor(x/32);
-  let coorY = Math.floor((y/32)+0.5);
-  if (bitmap[coorY][coorX] == 1) {
+function handleStepOnRed(x) {
+  if (x == 176) {
     dieAnimation();
     setTimeout(sendFail, 500);
     return true;
@@ -80,40 +76,33 @@ function doFrame(now) {
     if (submitted && document.getElementById("submit").disabled === false) {
       document.getElementById("submit").disabled = true;
       setFinished(false);
-      player.setXY(176, 192);
+
+      for (let i = 0; i < bridgeTiles.length; i++) {
+        bridgeTiles[i].danger();
+      }
+
+      player.setXY(112, 192);
       player.move();
     }
 
-    if (submitted && (result.length === 0)) {
+    let nowPos = player.getXY();
+
+    if (nowPos.x == targetX) {
       endAnimation();
-
-      let nowPos = player.getXY();
-      if (nowPos.x == targetX) {
-        setTimeout(sendSuccess, 1000);
-      } else {
-        setTimeout(sendFail, 1000);
-      }
-
-      // return;
+      setTimeout(sendSuccess, 1000);
     }
 
-    if (submitted) {
-      handleStepOnRed(nowPos.x, nowPos.y);
+    if (submitted && !correct) {
+      handleStepOnRed(nowPos.x);
     }
 
     if (submitted && !finished) {
-      let targetPos = result[0];
+      player.setXY(nowPos.x + 1, nowPos.y);
+    }
 
-      if (nowPos.x > targetPos[0] * 32) {
-        player.setXY(nowPos.x - 1, nowPos.y);
-      } else if (nowPos.x < targetPos[0] * 32) {
-        player.setXY(nowPos.x + 1, nowPos.y);
-      } else if (nowPos.y > targetPos[1] * 32) {
-        player.setXY(nowPos.x, nowPos.y - 1);
-      } else if (nowPos.y < targetPos[1] * 32) {
-        player.setXY(nowPos.x, nowPos.y + 1);
-      } else {
-        result.shift();
+    if (submitted && correct) {
+      for (let i = 0; i < bridgeTiles.length; i++) {
+        bridgeTiles[i].safe();
       }
     }
 
@@ -132,6 +121,22 @@ function doFrame(now) {
     }
     player.draw();
 
+    /* Show Array */
+    context.font = "20px Consolas";
+    context.textAlign = "center";
+
+    if (submitted) {
+      if (!correct) {
+        context.fillStyle = "red";
+      } else {
+        context.fillStyle = "green";
+      }
+
+      for (let i = 0; i < 10; i++) {
+        context.fillText(result[i], 176 + 32 * i, 284);
+      }
+    }   
+    
     /* Process the next frame */
     requestAnimationFrame(doFrame);
 }

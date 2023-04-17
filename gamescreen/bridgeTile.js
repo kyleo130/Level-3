@@ -24,5 +24,6 @@ export const BridgeTile = function(ctx, x, y) {
         danger: danger,
         draw: sprite.draw,
         update: sprite.update,
+        getXY: sprite.getXY
     };
 };
